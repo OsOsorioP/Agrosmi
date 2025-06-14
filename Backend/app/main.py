@@ -1,50 +1,24 @@
 from fastapi import FastAPI
-from pydantic import BaseModel 
-from langchain_core.messages import HumanMessage 
+from fastapi.middleware.cors import CORSMiddleware
+from .api.endpoints import router
+from dotenv import load_dotenv
+load_dotenv()
 
-# Define la aplicación FastAPI
-app = FastAPI()
+app_fastapi = FastAPI(
+    title="Plataforma Multiagente de Agricultura Sostenible v1",
+    description="API para interactuar con el sistema multiagente iterativo.",
+    version="0.1.0"
+)
 
-# Modelo para la solicitud del chat
-class ChatRequest(BaseModel):
-    consulta: str
-    thread_id: str = "default_thread"
+origins = ["http://localhost:5173",]
 
-# Endpoint para interactuar con el agente
-@app.post("/chat")
-async def chat_with_agent(request: ChatRequest):
-    print(f"\nRecibida consulta: {request.consulta} para thread: {request.thread_id}")
-    try:
-        initial_state = {
-            "user_input": request.consulta,
-            "original_input": request.consulta,
-            "messages": [HumanMessage(content=request.consulta)], 
-        }
+app_fastapi.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  
+    allow_credentials=True, 
+    allow_methods=["*"],    
+    allow_headers=["*"],    
+    expose_headers=["Content-Type"]
+)
 
-        config = {"configurable": {"thread_id": request.thread_id}}
-
-        final_state_snapshot = await app_with_checkpoint.ainvoke(initial_state, config=config)
-        final_state_values = final_state_snapshot.values
-
-        final_response = final_state_values.get("validated_output", final_state_values.get("agent_output", "Lo siento, no pude procesar la consulta."))
-        tool_results = final_state_values.get("tool_results", "")
-        last_agent = final_state_values.get("last_agent", "unknown")
-        validation_passed = final_state_values.get("validation_passed", False)
-
-
-        # Retorna la respuesta como JSON
-        return {
-            "response": final_response,
-            "thread_id": request.thread_id,
-            "tool_results": tool_results,
-            "last_agent": last_agent,
-            "validation_passed": validation_passed
-        }
-
-    except Exception as e:
-        print(f"Error en el endpoint /chat: {e}")
-        return {
-            "response": f"Ocurrió un error interno: {e}",
-            "thread_id": request.thread_id,
-            "error": str(e)
-        }, 500 
+app_fastapi.include_router(router, prefix="/api/v1") 
