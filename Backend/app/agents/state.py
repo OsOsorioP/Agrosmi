@@ -1,9 +1,9 @@
-from typing import Literal
+from typing import Literal,List
 from pydantic import BaseModel, Field
 from langgraph.graph import MessagesState
 
 class AgentState(MessagesState):
-    # messages: List[BaseMessage] is inherited from MessagesState
+    #messages: List[BaseMessage]
     user_input: str = Field(description="The current input being processed (might be enhanced)")
     original_input: str = Field(description="The initial input from the user")
     enhanced_input: str = Field(default="", description="Result of the enhancer")
