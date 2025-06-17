@@ -30,6 +30,7 @@ async def enhancer_node(state: AgentState) -> AgentState:
     """
     system_message = SystemMessage(content=system_prompt_content)
     user_message = HumanMessage(content=user_input)
+    
 
     try:
         response = await llm.with_structured_output(EnhancementResult).ainvoke([
@@ -39,13 +40,12 @@ async def enhancer_node(state: AgentState) -> AgentState:
 
         state["enhanced_input"] = response.enhanced_input
         state["enhancement_applied"] = response.needs_enhancement
-
-        if response.needs_enhancement:
-            state["user_input"] = response.enhanced_input
+        
 
     except Exception as e:
         state["enhanced_input"] = user_input
         state["enhancement_applied"] = False
 
     state["last_agent"] = "enhancer"
+
     return state
