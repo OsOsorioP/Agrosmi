@@ -1,5 +1,5 @@
 from .state import AgentState
-from .tools import all_tools
+from .tools import water_tools, monitoring_tools, commercialization_tools, sustainability_tools,production_tools,supply_chain_tools, risk_tools
 from .create_agent import create_specialized_agent
 
 async def water_node(state: AgentState) -> AgentState:
@@ -8,7 +8,7 @@ async def water_node(state: AgentState) -> AgentState:
         state,
         "water",
         "🌊 ESPECIALISTA EN RECURSOS HÍDRICOS",
-        all_tools["water_tools"],
+        water_tools,
         "Analiza todo lo relacionado con agua, riego, humedad del suelo y calidad del agua."
     )
 
@@ -18,7 +18,7 @@ async def monitoring_node(state: AgentState) -> AgentState:
         state,
         "monitoring",
         "🌱 ESPECIALISTA EN MONITOREO DE CULTIVOS",
-        all_tools["monitoring_tools"],
+        monitoring_tools,
         "Monitorea la salud de cultivos, detecta plagas, analiza biomasa y diagnóstica problemas."
     )
 
@@ -28,7 +28,7 @@ async def production_node(state: AgentState) -> AgentState:
         state,
         "production",
         "📈 ESPECIALISTA EN OPTIMIZACIÓN DE PRODUCCIÓN",
-        all_tools["production_tools"],
+        production_tools,
         "Optimiza la producción agrícola, predice rendimientos y mejora el uso de recursos."
     )
 
@@ -38,7 +38,7 @@ async def sustainability_node(state: AgentState) -> AgentState:
         state,
         "sustainability",
         "🌍 ESPECIALISTA EN SOSTENIBILIDAD AGRÍCOLA",
-        all_tools["sustainability_tools"],
+        sustainability_tools,
         "Evalúa sostenibilidad, huella de carbono, biodiversidad y prácticas agrícolas eco-friendly."
     )
 
@@ -48,7 +48,7 @@ async def supply_chain_node(state: AgentState) -> AgentState:
         state,
         "supply_chain",
         "🚛 ESPECIALISTA EN CADENA DE SUMINISTRO",
-        all_tools["supply_chain_tools"],
+        supply_chain_tools,
         "Optimiza logística, gestiona inventarios y mejora la eficiencia de la cadena de suministro."
     )
 
@@ -58,7 +58,7 @@ async def commercialization_node(state: AgentState) -> AgentState:
         state,
         "commercialization",
         "💰 ESPECIALISTA EN COMERCIALIZACIÓN AGRÍCOLA",
-        all_tools["commercialization_tools"],
+        commercialization_tools,
         "Analiza mercados, precios, demanda y oportunidades de comercialización."
     )
 
@@ -68,6 +68,6 @@ async def risk_node(state: AgentState) -> AgentState:
         state,
         "risk",
         "⚠️ ESPECIALISTA EN GESTIÓN DE RIESGOS AGRÍCOLAS",
-        all_tools["risk_tools"],
+        risk_tools,
         "Predice y mitiga riesgos climáticos, fitosanitarios y de producción."
     )
