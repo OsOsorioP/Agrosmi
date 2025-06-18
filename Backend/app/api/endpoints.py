@@ -2,10 +2,12 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException, status
 from langchain_core.messages import HumanMessage, BaseMessage
+from pydantic_geojson import PolygonModel
+from psycopg2.extras import RealDictCursor
 
 from ..agents.graph import app_with_checkpoint
-from ..models.models import ChatRequest, ApiChatMessageInput
-
+from ..models.models import ChatRequest, ApiChatMessageInput, ParcelCreate, ParcelResponse
+from ..db.db import get_db_connection
 from ..utils import convert_to_langchain_message, convert_from_langchain_message
 
 router = APIRouter()
@@ -78,3 +80,74 @@ async def chat_with_agent(request: ChatRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Ocurrió un error interno: {str(e)}"
         )
+        
+@router.post("/api/parcels", response_model=ParcelResponse, status_code=201)
+async def create_parcel(parcel: ParcelCreate):
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor) # Para obtener resultados como diccionarios
+
+        # Convertir el objeto Pydantic GeoJSON a string JSON para ST_GeomFromGeoJSON
+        geometry_geojson_str = parcel.geometry.model_dump_json()
+
+        query = """
+            INSERT INTO parcels (name, description, geometry)
+            VALUES (%s, %s, ST_GeomFromGeoJSON(%s, 4326))
+            RETURNING id, name, description, ST_AsGeoJSON(geometry) as geometry, created_at;
+        """
+        cursor.execute(query, (parcel.name, parcel.description, geometry_geojson_str))
+        new_parcel = cursor.fetchone()
+        conn.commit()
+
+        if not new_parcel:
+            raise HTTPException(status_code=500, detail="No se pudo crear la parcela.")
+
+        # Convertir la geometría de vuelta a PolygonModel para la respuesta
+        new_parcel['geometry'] = PolygonModel.model_validate_json(new_parcel['geometry'])
+
+        return ParcelResponse(**new_parcel)
+    except HTTPException:
+        raise # Re-lanza las excepciones HTTP que ya hemos manejado
+    except Exception as e:
+        print(f"Error al insertar parcela: {e}")
+        if conn:
+            conn.rollback() # Deshacer la transacción en caso de error
+        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {e}")
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+# Ruta para obtener todas las parcelas
+@router.get("/api/parcels", response_model=List[ParcelResponse])
+async def get_all_parcels():
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+        query = """
+            SELECT id, name, description, ST_AsGeoJSON(geometry) as geometry, created_at
+            FROM parcels;
+        """
+        cursor.execute(query)
+        parcels_data = cursor.fetchall()
+
+        # Convertir la geometría de cada parcela de string GeoJSON a PolygonModel
+        for parcel in parcels_data:
+            parcel['geometry'] = PolygonModel.model_validate_json(parcel['geometry'])
+
+        return [ParcelResponse(**parcel) for parcel in parcels_data]
+    except Exception as e:
+        print(f"Error al obtener parcelas: {e}")
+        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {e}")
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+# Ruta de prueba
+@router.get("/")
+async def read_root():
+    return {"message": "Bienvenido a Agrosmi"}
