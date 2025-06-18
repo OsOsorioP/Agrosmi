@@ -1,10 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
+import ParcelMap from '@/components/ParcelMap';
+import { StyleSheet } from 'react-native';
 
 export default function Tab() {
   return (
-    <View style={styles.container}>
-      <Text>Aqui va el clima</Text>
-    </View>
+    <ParcelMap />
   );
 }
 
