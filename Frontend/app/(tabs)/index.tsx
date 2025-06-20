@@ -14,7 +14,7 @@ export default function Tab() {
   const [userInput, setUserInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const headerHeight = Platform.OS === 'ios' ? useHeaderHeight() : 0;
+  const headerHeight = Platform.OS === 'ios' ? useHeaderHeight() : 38;
 
   const sendMessage = async (newMessage: string) => {
     setIsLoading(true);
@@ -62,7 +62,7 @@ export default function Tab() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior='padding'
@@ -112,7 +112,7 @@ export default function Tab() {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </>
   );
 }
 
@@ -147,7 +147,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     padding: 8,
-    marginBottom: 8,
     marginHorizontal: 10,
   },
   input: {
