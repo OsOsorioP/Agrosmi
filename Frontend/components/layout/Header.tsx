@@ -29,6 +29,7 @@ const Header = ({ title, showBackButton = false, onBackPress, rightComponent, he
 
 const styles = StyleSheet.create({
   header: {
+    flex:1,
     backgroundColor: '#3498db',
     paddingTop: 40, 
     paddingBottom: 10,
