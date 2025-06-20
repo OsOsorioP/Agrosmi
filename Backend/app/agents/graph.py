@@ -1,5 +1,4 @@
 from langgraph.graph import StateGraph, START, END
-from langgraph.checkpoint.sqlite import SqliteSaver
 
 from .supervisor import supervisor_node
 from .supervisor_finish import supervisor_finish
@@ -61,6 +60,4 @@ def create_complete_workflow():
 
 app = create_complete_workflow()
 
-db = SqliteSaver.from_conn_string("sqlite:///langgraph_checkpoint.sqlite")
-
-app_with_checkpoint = app.with_config(checkpointer=db)
+app_with_checkpoint = app
