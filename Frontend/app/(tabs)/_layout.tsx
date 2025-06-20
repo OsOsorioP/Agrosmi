@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { IconSymbol, MAPPING } from '@/components/ui/IconSymbol';
+import { TabBar } from '@/components/TabBar';
 
 interface props {
   name: string;
@@ -19,6 +20,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+    tabBar={props => <TabBar {...props}/>}
       screenOptions={{ 
         headerShown:false,
         tabBarActiveTintColor: 'green', 
@@ -29,9 +31,10 @@ export default function TabLayout() {
         },
         animation: "fade",
         tabBarStyle: {
-          padding:0,
-          margin:0,
+          margin:5,
           borderRadius:16,
+          height:70,
+          boxShadow:"",
         }
       }}
     >
