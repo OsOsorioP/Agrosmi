@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // O cualquier otra librería de iconos
+import { View, Text, StyleSheet, ViewStyle, TextStyle, Image } from 'react-native';
 
 interface HeaderProps {
   title: string;
@@ -11,43 +10,36 @@ interface HeaderProps {
   titleStyle?: TextStyle; 
 }
 
-const Header = ({ title, showBackButton = false, onBackPress, rightComponent, headerStyle, titleStyle }: HeaderProps) => {
+const Header = ({ title, headerStyle, titleStyle }: HeaderProps) => {
   return (
     <View style={[styles.header, headerStyle]}>
-      {showBackButton && (
-        <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
-          <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-      )}
+      <Image style={styles.logo} source={require('../../assets/images/logo.png')}/>
       <Text style={[styles.title, titleStyle]}>{title}</Text>
-      {rightComponent && (
-        <View style={styles.rightComponent}>{rightComponent}</View>
-      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    flex:1,
-    backgroundColor: '#3498db',
-    paddingTop: 40, 
-    paddingBottom: 10,
+    backgroundColor: '#333',
     paddingHorizontal: 15,
+    paddingVertical:10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent:"flex-start",
+    height:"auto",
   },
   title: {
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
   },
-  backButton: {
-    padding: 5,
-  },
-  rightComponent: {
-  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    resizeMode: 'contain', 
+  }
 });
 
 export default Header;
