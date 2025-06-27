@@ -12,6 +12,7 @@ async def validator_node(state: AgentState) -> AgentState:
     agent_output = state.get("agent_output", "")
     original_input = state.get("original_input", "")
     user_input = state.get("user_input", "")
+    messages = state.get("messages")
 
     # Get the output to validate - prioritize validated_output if it exists from a previous validation attempt
     output_to_validate = validated_output if validated_output else agent_output
@@ -38,7 +39,7 @@ async def validator_node(state: AgentState) -> AgentState:
     - Respuestas incompletas o vagas
     - Falta de datos específicos cuando se requieren (ej. si se pidió un valor y no se dio)
     - Recomendaciones no prácticas o genéricas
-    - Alucinaciones o invención de datos
+    - Alucinaciones o invención de datos, al menos que se encuentre en el historial de mensajes: {messages}
 
     💯 PUNTUACIÓN:
     - 90-100: Excelente, no necesita corrección.
