@@ -7,15 +7,10 @@ from ..utils import format_messages_for_prompt
 async def supervisor_node(state: AgentState) -> AgentState:
     """🎯 Supervisor principal que orquesta todos los agentes."""
     print("\n--- Entering supervisor_node ---")
+    
+    input_for_routing = state.get("user_input")
 
-    # Access state fields using .get()
-    enhanced_input = state.get("enhanced_input", "")
-    enhancement_applied = state.get("enhancement_applied", False)
-    user_input = state.get("user_input", "")
     messages = state.get("messages", []) # messages should be a list of BaseMessage
-
-    # Decide which input to use for routing: enhanced if applied, otherwise original
-    input_for_routing = enhanced_input if enhancement_applied else user_input
 
     system_prompt_content = f"""
     🎯 SUPERVISOR AGRÍCOLA MULTI-AGENTE
