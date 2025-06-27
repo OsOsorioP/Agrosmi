@@ -5,7 +5,7 @@ import type {
   ApiChatMessage,
 } from "../types";
 
-const YOUR_LOCAL_IP = '192.168.80.10';
+const YOUR_LOCAL_IP = '192.168.145.122';
 const API_PORT = '8000';
 
 const API_BASE_URL = `http://${YOUR_LOCAL_IP}:${API_PORT}/api/v1`;
