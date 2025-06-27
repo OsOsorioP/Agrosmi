@@ -1,16 +1,16 @@
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useState } from 'react';
 import { Text, StyleSheet, View, StatusBar, TextInput, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { LegendList } from "@legendapp/list";
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { postChatMessage } from '@/services/ChatService';
 import { ApiChatMessage } from '@/types';
+import Header from '@/components/layout/Header';
 
 
 export default function Tab() {
   const [threadId, setThreadId] = useState<string>("1");
-  const [messages, setMessages] = useState<ApiChatMessage[]>([])
+  const [messages, setMessages] = useState<ApiChatMessage[]>([{"role":"ai","content":"¡Hola, agricultor! 👋 Soy Agrosmi, tu agrónomo virtual. Estoy aquí para ayudarte a tomar las mejores decisiones para tus cultivos, con datos en tiempo real de tu finca y la inteligencia generativa."}])
   const [userInput, setUserInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -68,6 +68,7 @@ export default function Tab() {
         behavior='padding'
         keyboardVerticalOffset={headerHeight}
       >
+        <Header title='Agrosmi'/>
         <LegendList
           data={messages}
           renderItem={({ item }) => (
