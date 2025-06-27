@@ -44,7 +44,7 @@ async def enhancer_node(state: AgentState) -> AgentState:
 
     except Exception as e:
         state["enhanced_input"] = user_input
-        state["enhancement_applied"] = False
+        state["enhancement_applied"] = True
 
     state["last_agent"] = "enhancer"
 
