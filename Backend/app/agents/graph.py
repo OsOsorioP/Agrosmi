@@ -1,5 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 
+import os
+
 from .supervisor import supervisor_node
 from .supervisor_finish import supervisor_finish
 from .validator import validator_node
@@ -61,3 +63,8 @@ def create_complete_workflow():
 app = create_complete_workflow()
 
 app_with_checkpoint = app
+
+graph_image_bytes = app_with_checkpoint.get_graph().draw_mermaid_png()
+image_path = os.path.join(os.path.dirname("app/agents/"), "workflow_graph.png")
+with open(image_path, "wb") as f:
+  f.write(graph_image_bytes)
